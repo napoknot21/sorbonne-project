@@ -168,7 +168,7 @@ def estimate_slope (N_list, err_list) :
     return p
 
 
-def graph_n_estimation (N_values : Optional[List[int]] = None) :
+def graph_n_estimation_uniform (N_values : Optional[List[int]] = None) :
     """
     Docstring for graph_n_estimation
     
@@ -245,7 +245,7 @@ def run_geometric (N_values, alpha) :
     return err_H, err_L2
 
 
-def graph_n_estimation (N_values : Optional[List[int]] = None, alpha : Optional[int] = None) :
+def graph_n_estimation_geometric (N_values : Optional[List[int]] = None, alpha : Optional[int] = None) :
     """
     Docstring for graph_n_estimation
     
@@ -255,7 +255,7 @@ def graph_n_estimation (N_values : Optional[List[int]] = None, alpha : Optional[
     N_values = N_VALUES if N_values is None else N_values
     alpha = ALPHA_0 if alpha is None else alpha # Here alpha is := 4
 
-    errH_g, errL2_g = run_geometric(N_values)
+    errH_g, errL2_g = run_geometric(N_values, alpha)
 
     print(f"\n[*] Geometric mesh (alpha={alpha})")
 
@@ -283,7 +283,7 @@ def errors_for_multiple_alpha (N_values, alphas) :
     """
 
 
-
+    return None
 
 # Question 9
 
@@ -297,7 +297,7 @@ def _is_valid_mesh (x : Optional[List[float]] = None) -> bool :
     
     """
 
-    if len(x) <= 0 :
+    if len(x) <= 2 :
         return False
     
     return (x[0] == 0 and x[-1] == 1 and np.all(np.diff(x) > 0))
@@ -335,8 +335,9 @@ def L2_error (
         for xi, wi in zip(gp, gw) :
 
             X = mid + half * xi
-            phi_L = (b - x)/h
-            phi_R = (X - a)/h
+            
+            phi_L = (b - X) / h
+            phi_R = (X - a) / h
 
             U_h_x = UL * phi_L + UR * phi_R
 
