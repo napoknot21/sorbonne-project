@@ -426,5 +426,24 @@ def L2_error (
     return np.sqrt(err2)
 
 
-def p1_eval () :
-    return None
+def p1_eval (x_nodes, U_nodes, x_eval) :
+    """
+    Evaluate a P1 FEM function (piecewise linear) on x_eval.
+    """
+    x_nodes = np.asarray(x_nodes, dtype=float)
+    U_nodes = np.asarray(U_nodes, dtype=float)
+    x_eval = np.asarray(x_eval, dtype=float)
+
+    N = len(x_nodes) - 1
+
+    idx = np.searchsorted(x_nodes, x_eval, side="right") - 1
+    idx = np.clip(idx, 0, N-1)
+
+    a = x_nodes[idx]
+    b = x_nodes[idx + 1]
+    h = b - a
+
+    phi_L = (b - x_eval) / h
+    phi_R = (x_eval - a) / h
+
+    return U_nodes[idx] * phi_L + U_nodes[idx + 1] * phi_R
