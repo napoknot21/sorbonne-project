@@ -51,3 +51,20 @@ def plot_meshes (N, alphas, func) :
     return None
 
 
+def plot_alphas (N, alphas, err_H, err_L2, label_H, label_L2, x_label = "alpha") :
+
+    plt.figure()
+    
+    plt.semilogy(alphas, err_H, marker="O", label=label_H)
+    plt.semilogy(alphas, err_L2, marker="O", label=label_L2)
+
+    plt.grid(True, which="both")
+
+    plt.xlabel(x_label)
+    plt.ylabel(f"Error (N={N})")
+
+    plt.title(f"Error vs alpha (fixed N={N})")
+
+    plt.legend() 
+
+    return None   

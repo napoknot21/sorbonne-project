@@ -6,7 +6,7 @@ import numpy as np
 from typing import List, Optional, Tuple
 
 from src.params import u_exact, f_rhs, U_H10_NORM2, MIN_FLOAT_VALUE_NEGATIVE, N_VALUES, N_VALUE, ALPHAS, ALPHA_0
-from src.utils import plot_convergence, plot_meshes
+from src.utils import plot_convergence, plot_meshes, plot_alphas
 
 
 # Question 1
@@ -307,7 +307,8 @@ def errors_for_multiple_alpha (N : Optional[int] = None, alphas : Optional[List[
     
     return best_alpha, err_H, err_L2
 
-def graph_alpha (N : Optional[int] = None, alphas : Optional[List[int]] = None) :
+
+def graph_alpha_comparaison (N : Optional[int] = None, alphas : Optional[List[int]] = None) :
     """
     """
     N = N_VALUE if N is None else N
@@ -318,8 +319,10 @@ def graph_alpha (N : Optional[int] = None, alphas : Optional[List[int]] = None) 
     for a, eH, eL2 in zip(alphas, err_H, err_L2) :
         print(f"\n[*] alpha={a:>2}  err_H10={eH:.6e}  err_L2={eL2:.6e}")
 
+    plot_alphas(N, alphas, err_H, err_L2, "H1_O Error", "L2 Error")
     
     return None
+
 
 # Question 9
 
