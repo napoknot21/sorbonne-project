@@ -1,0 +1,231 @@
+\documentclass[11pt,a4paper]{article}
+
+% --------------------------------------------------
+% Packages
+% --------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{float}
+
+\geometry{margin=2.5cm}
+
+% --------------------------------------------------
+% Title
+% --------------------------------------------------
+\title{Méthode des éléments finis 1D\\
+Influence du maillage uniforme et géométrique}
+\author{Charly MARTIN AVILA - 21503268}
+\date{Décembre 2025}
+
+\newpage
+
+
+\begin{document}
+
+\maketitle
+
+% ==================================================
+\section{Introduction}
+% ==================================================
+
+La méthode des éléments finis est une méthode de discrétisation largement utilisée
+pour la résolution numérique des équations aux dérivées partielles.
+Son efficacité dépend fortement de la régularité de la solution recherchée
+et du choix du maillage utilisé pour la discrétisation du domaine.
+
+Dans ce projet, on étudie un problème de Poisson unidimensionnel
+dont la solution exacte présente une singularité locale.
+L’objectif est d’analyser l’impact de cette singularité sur la convergence
+de la méthode des éléments finis P1
+et de montrer comment un choix approprié du maillage,
+en particulier un maillage géométrique,
+peut améliorer significativement la précision de l’approximation numérique.
+
+% ==================================================
+\section{Problème modèle}
+% ==================================================
+
+On considère le problème elliptique suivant :
+\begin{equation}
+\begin{cases}
+- u''(x) = f(x), \quad x \in (0,1), \\
+u(0) = u(1) = 0.
+\end{cases}
+\end{equation}
+
+La solution exacte est donnée par :
+\begin{equation}
+u(x) = x^{3/4}(1-x).
+\end{equation}
+
+Cette fonction appartient à l’espace $H^1_0(0,1)$,
+mais sa dérivée présente une singularité en $x=0$,
+ce qui implique que $u \notin H^2(0,1)$.
+Ce défaut de régularité est un élément central du projet,
+car il influence directement les ordres de convergence
+que l’on peut espérer obtenir avec les éléments finis P1.
+
+% ==================================================
+\section{Méthode des éléments finis P1}
+% ==================================================
+
+On cherche une approximation $u_h$ de la solution exacte $u$
+dans l’espace des fonctions continues,
+affines par morceaux sur un maillage de l’intervalle $(0,1)$,
+et nulles aux bornes.
+La formulation variationnelle du problème conduit à :
+\[
+\int_0^1 u'(x) v'(x)\,dx = \int_0^1 f(x)v(x)\,dx,
+\quad \forall v \in H^1_0(0,1).
+\]
+
+La discrétisation par éléments finis P1 conduit à un système linéaire
+$AU=b$, où $A$ est la matrice de rigidité et $b$ le vecteur de charge.
+Le second membre est approché par une quadrature au point milieu.
+
+Les erreurs numériques sont mesurées en norme énergie
+$\|u-u_h\|_{H^1_0}$ et en norme $L^2$,
+afin d’analyser finement l’influence du maillage.
+
+% ==================================================
+\section{Maillage uniforme : convergence (Question 5)}
+% ==================================================
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{plots/q5_uniform_energy.png}
+\caption{Erreur en norme énergie $\|u-u_h\|_{H^1_0}$ pour un maillage uniforme (échelle log-log).}
+\label{fig:q5_uniform_energy}
+\end{figure}
+
+La figure~\ref{fig:q5_uniform_energy} montre la convergence de l’erreur en norme énergie
+lorsque le nombre d’éléments $N$ augmente.
+Cependant, le taux de convergence observé est inférieur à celui attendu
+dans le cas d’une solution régulière.
+Ce comportement est parfaitement cohérent avec la théorie :
+la singularité de la dérivée de la solution exacte près de $x=0$
+empêche l’approximation P1 sur un maillage uniforme
+d’atteindre l’ordre de convergence optimal.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{plots/q5_uniform_l2.png}
+\caption{Erreur en norme $L^2$ pour un maillage uniforme (échelle log-log).}
+\label{fig:q5_uniform_l2}
+\end{figure}
+
+La figure~\ref{fig:q5_uniform_l2} présente l’évolution de l’erreur en norme $L^2$.
+La convergence est plus rapide qu’en norme énergie,
+ce qui est conforme à l’analyse théorique des éléments finis.
+Néanmoins, l’ordre reste limité par la régularité insuffisante de la solution,
+confirmant que le maillage uniforme n’est pas optimal pour ce problème.
+
+% ==================================================
+\section{Maillages géométriques (Question 6)}
+% ==================================================
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{plots/q6_meshes.png}
+\caption{Maillages géométriques pour $N=50$ et différentes valeurs du paramètre $\alpha$.}
+\label{fig:q6_meshes}
+\end{figure}
+
+La figure~\ref{fig:q6_meshes} illustre l’effet du paramètre $\alpha$
+dans la construction d’un maillage géométrique.
+Lorsque $\alpha>1$, les points sont concentrés près de l’origine,
+zone où la solution présente une singularité.
+Mathématiquement, ce choix de maillage vise à compenser la perte de régularité
+en réduisant la taille des éléments dans les zones critiques,
+où l’erreur locale d’approximation est dominante.
+
+% ==================================================
+\section{Convergence sur maillage géométrique (Question 7)}
+% ==================================================
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{plots/q7_geo_energy.png}
+\caption{Erreur en norme énergie pour un maillage géométrique avec $\alpha=4$.}
+\label{fig:q7_geo_energy}
+\end{figure}
+
+La figure~\ref{fig:q7_geo_energy} montre une amélioration nette de la convergence
+en norme énergie par rapport au maillage uniforme.
+Le raffinement local du maillage permet de mieux approximer la solution
+dans les zones où sa dérivée est singulière,
+ce qui réduit l’erreur globale mesurée par la norme énergie.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{plots/q7_geo_l2.png}
+\caption{Erreur en norme $L^2$ pour un maillage géométrique avec $\alpha=4$.}
+\label{fig:q7_geo_l2}
+\end{figure}
+
+La figure~\ref{fig:q7_geo_l2} confirme également une amélioration en norme $L^2$.
+Bien que cette norme soit moins sensible aux variations locales de la dérivée,
+l’adaptation du maillage améliore la qualité globale de l’approximation.
+
+% ==================================================
+\section{Choix du paramètre $\alpha$ à $N$ fixé (Question 8)}
+% ==================================================
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{plots/q8_error_vs_alpha.png}
+\caption{Erreur en norme énergie et en norme $L^2$ en fonction de $\alpha$ pour $N=50$.}
+\label{fig:q8_alpha}
+\end{figure}
+
+La figure~\ref{fig:q8_alpha} montre clairement l’influence du paramètre $\alpha$
+lorsque le nombre de points est fixé.
+Pour des valeurs faibles de $\alpha$, le maillage reste trop uniforme
+et ne capture pas correctement la singularité.
+Lorsque $\alpha$ augmente, l’erreur diminue grâce au raffinement local.
+Cependant, pour des valeurs trop grandes de $\alpha$,
+la taille excessive des éléments loin de l’origine dégrade l’approximation globale.
+Il existe donc une valeur optimale de $\alpha$,
+résultant d’un compromis entre raffinement local et précision globale.
+
+% ==================================================
+\section{Comparaison des solutions à $N$ fixé (Question 9)}
+% ==================================================
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{plots/q9_solutions.png}
+\caption{Comparaison des solutions numériques pour $N=50$ :
+maillage uniforme et géométrique ($\alpha=4$), comparées à la solution exacte.}
+\label{fig:q9_solutions}
+\end{figure}
+
+La figure~\ref{fig:q9_solutions} montre que les deux solutions numériques
+sont presque indiscernables visuellement.
+Ce comportement est attendu, car pour un nombre d’éléments suffisant,
+les deux méthodes convergent vers la solution exacte.
+La différence entre les deux approches est principalement quantitative
+et apparaît dans les normes d’erreur,
+en particulier près de $x=0$ où la solution est peu régulière.
+
+% ==================================================
+\section{Conclusion}
+% ==================================================
+
+Ce projet met en évidence le lien étroit entre régularité de la solution,
+choix du maillage et performance de la méthode des éléments finis.
+Dans le cas d’une solution présentant une singularité locale,
+le maillage uniforme conduit à une convergence sous-optimale.
+L’utilisation d’un maillage géométrique permet d’adapter la discrétisation
+aux propriétés analytiques de la solution
+et d’améliorer significativement la précision numérique.
+Ces résultats soulignent l’importance de l’analyse mathématique
+dans la conception de méthodes numériques efficaces.
+
+\end{document}
