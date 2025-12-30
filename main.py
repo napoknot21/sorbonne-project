@@ -281,7 +281,7 @@ def errors_for_multiple_alpha (N_values, alphas) :
     :param N_values: Description
     :param alphas: Description
     """
-
+    
 
     return None
 
