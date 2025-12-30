@@ -30,13 +30,13 @@ def FEM_1d_assemble (x : Optional[List[float]] = None) :
 
         h = x[k] - x[k-1]
 
-        # Matrice local
+        # Matrice locale
         A[k-1, k-1] += 1/h
         A[k-1, k] += -(1/h)
         A[k, k-1] += -(1/h)
         A[k, k] += 1/h
 
-        # midpoint qudrature for load
+        # midpoint quadrature for load
         m = 0.5 * (x[k] + x[k-1])
         f_m = f_rhs(m)
 
@@ -274,15 +274,51 @@ def graph_n_estimation_geometric (N_values : Optional[List[int]] = None, alpha :
 
 # Question 8
 
-def errors_for_multiple_alpha (N_values, alphas) :
+def errors_for_multiple_alpha (N : Optional[int] = None, alphas : Optional[List[int]] = None) :
     """
-    Docstring for errors_for_multiple_alpha
+    Question 8 (fixed N):
+    - Compute errors for alpha in ALPHAS with N = N_VALUE
+    - Choose best alpha (min energy error)
+    - Plot error vs alpha
     
     :param N_values: Description
     :param alphas: Description
     """
-    
+    N = N_VALUE if N is None else N
+    alphas = ALPHAS if alphas is None else alphas
 
+    err_H = []
+    err_L2 = []
+
+    print(f"\n[*] Question 8 : Errors vs alpha (fixed N={N})")
+
+    for a in alphas :
+
+        x = mesh_geometric(N, a)
+        _, _, _, eH, eL2 = FEM_1d(x, compute_l2=True)
+
+        err_H.append(eH)
+        err_L2.append(eL2)
+
+    best_idx = int(np.argmin(err_H))
+    best_alpha = list(alphas)[best_idx]
+
+    print(f"\n[*] Best alpha for fixed N={N} (min energy error): {best_alpha}")
+    
+    return best_alpha, err_H, err_L2
+
+def graph_alpha (N : Optional[int] = None, alphas : Optional[List[int]] = None) :
+    """
+    """
+    N = N_VALUE if N is None else N
+    alphas = ALPHAS if alphas is None else alphas
+    
+    best_alpha, err_H, err_L2 = errors_for_multiple_alpha(N, alphas)
+
+    for a, eH, eL2 in zip(alphas, err_H, err_L2) :
+        print(f"\n[*] alpha={a:>2}  err_H10={eH:.6e}  err_L2={eL2:.6e}")
+
+    
     return None
 
 # Question 9
