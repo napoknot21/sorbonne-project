@@ -95,6 +95,10 @@ def FEM_1d (
     N = len(x) - 1
 
     A, b, U_h = FEM_1d_solve(x)
+
+    if A is None or b is None or U_h is None :
+        return None, None, None, None, None
+
     U_int = U_h[1:N]
 
     # Garlekin
@@ -135,7 +139,9 @@ def run_uniform (N_values : Optional[list[int]] = None) :
     
     :param N_values: Description
     :type N_values: Optional[list[int]]
-    """   
+    """
+    N_values = N_VALUES if N_values is None else N_values
+
     err_H = []
     err_L2 = []
 
@@ -350,17 +356,17 @@ def compare_uniform_vs_geometric (N : Optional[int] = None, alpha : Optional[int
     print(f"\n[*] Uniform     : err_H10={eHU:.6e}  err_L2={eLU:.6e}")
     print(f"[*] Geo a={alpha}: err_H10={eHG:.6e}  err_L2={eLG:.6e}")
         
-    return xU, UU, xG, UG
+    return eHU, xU, UU, eHG, xG, UG
 
 
-def graph_u_uniform_vs_geometric (N : Optional[int] = None, alpha : Optional[List[int]] = None) :
+def graph_u_uniform_vs_geometric (N : Optional[int] = None, alpha : Optional[int] = None) :
     """
 
     """
     N = N_VALUE if N is None else N
     alpha = ALPHA_0 if alpha is None else alpha
 
-    xU, UU, xG, UG = compare_uniform_vs_geometric(N, alpha)
+    _, xU, UU, _, xG, UG = compare_uniform_vs_geometric(N, alpha)
 
     plot_uniform_vs_geometric(N, alpha, xU, UU, xG, UG, u_exact, p1_eval)
 
@@ -370,6 +376,7 @@ def graph_u_uniform_vs_geometric (N : Optional[int] = None, alpha : Optional[Lis
 
 # ------- Auxiliar functions --------
 
+
 def _is_valid_mesh (x : Optional[List[float]] = None) -> bool :
     """
     
@@ -378,7 +385,7 @@ def _is_valid_mesh (x : Optional[List[float]] = None) -> bool :
     if len(x) <= 2 :
         return False
     
-    return (x[0] == 0 and x[-1] == 1 and np.all(np.diff(x) > 0))
+    return (np.isclose(x[0], 0.0) and np.isclose(x[1], 1.0) and np.all(np.diff(x) > 0))
 
 
 def L2_error (
@@ -447,3 +454,5 @@ def p1_eval (x_nodes, U_nodes, x_eval) :
     phi_R = (x_eval - a) / h
 
     return U_nodes[idx] * phi_L + U_nodes[idx + 1] * phi_R
+
+

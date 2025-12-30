@@ -55,8 +55,8 @@ def plot_alphas (N, alphas, err_H, err_L2, label_H, label_L2, x_label = "alpha")
 
     plt.figure()
     
-    plt.semilogy(alphas, err_H, marker="O", label=label_H)
-    plt.semilogy(alphas, err_L2, marker="O", label=label_L2)
+    plt.semilogy(alphas, err_H, marker="o", label=label_H)
+    plt.semilogy(alphas, err_L2, marker="o", label=label_L2)
 
     plt.grid(True, which="both")
 
