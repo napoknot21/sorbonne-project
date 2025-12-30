@@ -278,7 +278,7 @@ def errors_for_multiple_alpha (N : Optional[int] = None, alphas : Optional[List[
     """
     Question 8 (fixed N):
     - Compute errors for alpha in ALPHAS with N = N_VALUE
-    - Choose best alpha (min energy error)
+    - Choose the best alpha (min energy error)
     - Plot error vs alpha
     
     :param N_values: Description
@@ -326,12 +326,7 @@ def graph_alpha_comparaison (N : Optional[int] = None, alphas : Optional[List[in
 
 # Question 9
 
-def compare_uniform_vs_geometric (
-        
-        N : Optional[int] = None,
-        alpha : Optional[int] = None,
-    
-    ) :
+def compare_uniform_vs_geometric (N : Optional[int] = None, alpha : Optional[int] = None) :
     """
     Docstring for compare_uniform_vs_geometric
     
@@ -340,9 +335,43 @@ def compare_uniform_vs_geometric (
     :param alpha: Description
     :type alpha: Optional[int]
     """
+    N = N_VALUE if N is None else N
+    alpha = ALPHA_0 if alpha is None else alpha
+
+    print(f"\n[*] Question 9 : Fixed N comparison (N={N}, alpha={alpha})")
+
+    xU = mesh_uniform(N)
+    _, _, UU, eHU, eLU = FEM_1d(xU, compute_l2=True)
+
+    xG = mesh_geometric(N, alpha)
+    _, _, UG, eHG, eLG = FEM_1d(xG, compute_l2=True)
+
+    print("\n[*] Fixed N comparison:")
+    print(f"\n[*] Uniform     : err_H10={eHU:.6e}  err_L2={eLU:.6e}")
+    print(f"[*] Geo a={alpha}: err_H10={eHG:.6e}  err_L2={eLG:.6e}")
+        
     return None
 
 
+def graph_u_uniform_vs_geometric () :
+    """
+
+    """
+
+    Xfine = np.linspace(0.0, 1.0, 2000)
+
+    plt.figure()
+    plt.plot(Xfine, u_exact(Xfine), label="u exact")
+    plt.plot(Xfine, p1_eval(xU, UU, Xfine), label=f"u_h uniform (N={N})")
+    plt.plot(Xfine, p1_eval(xG, UG, Xfine), label=f"u_h geometric (N={N}, alpha={alpha})")
+    plt.grid(True)
+    plt.xlabel("x")
+    plt.ylabel("u")
+    plt.title(f"Solutions (N={N}): uniform vs geometric")
+    plt.legend()
+    plt.show()
+
+    return None
 
 
 
