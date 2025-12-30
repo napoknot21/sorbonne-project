@@ -3,7 +3,7 @@
 **Author:** Charly MARTIN AVILA  
 **Student number:** 21503268  
 
----
+
 
 ## Overview
 
@@ -16,7 +16,7 @@ has **limited regularity**.
 The project was developed at **Master 1 level**, combining theoretical analysis,
 numerical methods, and clean Python implementation.
 
----
+
 
 ## Mathematical Problem
 
@@ -36,59 +36,84 @@ This lack of regularity motivates the use of **geometric meshes**.
 
 ## Project Structure
 
+```
 .
 ├── main.py                # Core numerical implementation
 ├── src/
 │   ├── params.py          # Mathematical parameters and exact solution
 │   └── utils.py           # Plotting and visualization utilities
-├── plots/                 # Generated figures (PNG)
-├── report.tex             # LaTeX report
+├── figures/               # Generated figures (PDF)
+├── report/
+│   ├── report.pdf         # Final report (PDF)
+│   ├── main.tex           # Latex source report file 
+│   └── plots/             # Generated figures (PNG)
 └── README.md
+```
 
----
 
 ## Main Module: main.py
 
 All the **core numerical logic** is implemented in main.py.
 
 ### Responsibilities
+
 - Assembly of the 1D FEM stiffness matrix and load vector
+
 - Solution of the linear system
+
 - Computation of errors (energy norm and L2 norm)
+
 - Generation of uniform and geometric meshes
+
 - Numerical experiments (Questions 5–9)
 
 ### Key Functions
+
 - FEM_1d_assemble
+
 - FEM_1d_solve
+
 - FEM_1d
+
 - mesh_uniform
+
 - mesh_geometric
+
 - run_uniform
+
 - run_geometric
+
 - errors_for_multiple_alpha
+
 - p1_eval
 
----
+
 
 ## Parameters Module: src/params.py
 
 This module contains:
+
 - Exact solution and RHS
+
 - Physical and numerical constants
+
 - Default values for N and alpha
 
----
+
 
 ## Visualization Module: src/utils.py
 
 This module handles:
+
 - Convergence plots
+
 - Mesh visualization
+
 - Error comparison plots
+
 - Solution comparison plots
 
----
+
 
 ## Conclusion
 
@@ -97,10 +122,4 @@ to the analytical properties of the solution.
 Geometric meshes significantly improve numerical accuracy for singular solutions,
 without increasing computational cost.
 
----
 
-## Author
-
-Charly MARTIN AVILA  
-Student number: 21503268  
-Master 1 Numerical Analysis
