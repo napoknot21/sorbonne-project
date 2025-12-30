@@ -320,11 +320,28 @@ def graph_alpha_comparaison (N : Optional[int] = None, alphas : Optional[List[in
         print(f"\n[*] alpha={a:>2}  err_H10={eH:.6e}  err_L2={eL2:.6e}")
 
     plot_alphas(N, alphas, err_H, err_L2, "H1_O Error", "L2 Error")
-    
+
     return None
 
 
 # Question 9
+
+def compare_uniform_vs_geometric (
+        
+        N : Optional[int] = None,
+        alpha : Optional[int] = None,
+    
+    ) :
+    """
+    Docstring for compare_uniform_vs_geometric
+    
+    :param N: Description
+    :type N: Optional[int]
+    :param alpha: Description
+    :type alpha: Optional[int]
+    """
+    return None
+
 
 
 
