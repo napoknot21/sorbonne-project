@@ -6,7 +6,7 @@ import numpy as np
 from typing import List, Optional, Tuple
 
 from src.params import u_exact, f_rhs, U_H10_NORM2, MIN_FLOAT_VALUE_NEGATIVE, N_VALUES, N_VALUE, ALPHAS, ALPHA_0
-from src.utils import plot_convergence, plot_meshes, plot_alphas
+from src.utils import plot_convergence, plot_meshes, plot_alphas, plot_uniform_vs_geometric
 
 
 # Question 1
@@ -350,26 +350,19 @@ def compare_uniform_vs_geometric (N : Optional[int] = None, alpha : Optional[int
     print(f"\n[*] Uniform     : err_H10={eHU:.6e}  err_L2={eLU:.6e}")
     print(f"[*] Geo a={alpha}: err_H10={eHG:.6e}  err_L2={eLG:.6e}")
         
-    return None
+    return xU, UU, xG, UG
 
 
-def graph_u_uniform_vs_geometric () :
+def graph_u_uniform_vs_geometric (N : Optional[int] = None, alpha : Optional[List[int]] = None) :
     """
 
     """
+    N = N_VALUE if N is None else N
+    alpha = ALPHA_0 if alpha is None else alpha
 
-    Xfine = np.linspace(0.0, 1.0, 2000)
+    xU, UU, xG, UG = compare_uniform_vs_geometric(N, alpha)
 
-    plt.figure()
-    plt.plot(Xfine, u_exact(Xfine), label="u exact")
-    plt.plot(Xfine, p1_eval(xU, UU, Xfine), label=f"u_h uniform (N={N})")
-    plt.plot(Xfine, p1_eval(xG, UG, Xfine), label=f"u_h geometric (N={N}, alpha={alpha})")
-    plt.grid(True)
-    plt.xlabel("x")
-    plt.ylabel("u")
-    plt.title(f"Solutions (N={N}): uniform vs geometric")
-    plt.legend()
-    plt.show()
+    plot_uniform_vs_geometric(N, alpha, xU, UU, xG, UG, u_exact, p1_eval)
 
     return None
 
@@ -433,3 +426,5 @@ def L2_error (
     return np.sqrt(err2)
 
 
+def p1_eval () :
+    return None

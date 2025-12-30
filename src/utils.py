@@ -67,4 +67,30 @@ def plot_alphas (N, alphas, err_H, err_L2, label_H, label_L2, x_label = "alpha")
 
     plt.legend() 
 
-    return None   
+    return None
+
+
+def plot_uniform_vs_geometric (N, alpha, xU, UU, xG, UG, u_exact, p1_eval) :
+    """
+    Docstring for plot_uniform_vs_geometric
+    """
+
+    Xfine = np.linspace(0.0, 1.0, 2000)
+
+    plt.figure()
+    
+    plt.plot(Xfine, u_exact(Xfine), label="u exact")
+    plt.plot(Xfine, p1_eval(xU, UU, Xfine), label=f"u_h uniform (N={N})")
+    plt.plot(Xfine, p1_eval(xG, UG, Xfine), label=f"u_h geometric (N={N}, alpha={alpha})")
+    
+    plt.grid(True)
+    
+    plt.xlabel("x")
+    plt.ylabel("u")
+    
+    plt.title(f"Solutions (N={N}): uniform vs geometric")
+    
+    plt.legend()
+    #plt.show()
+
+    return None
